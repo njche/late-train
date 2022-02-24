@@ -5,7 +5,7 @@ Late Train is an application where you can track a train heading from Eindhoven 
 
 *This app is still in development so some features are not yet complete*
 
-    - Watch this trip happen in real-time from google maps. ☑️
+    - Watch this trip happen in near real-time from google maps. ☑️
 
     - Vote on wether it will arrive on time or if it will be late. ❌
 
