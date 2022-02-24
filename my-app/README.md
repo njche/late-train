@@ -11,8 +11,4 @@ Late Train is an application where you can track a train heading from Eindhoven 
 
     - Expand trips to entirety of Netherlands. ❌
 
-<<<<<<< HEAD
     - Bet tokens on Blockchains depending on result, using Oracles. ❌
-=======
-    - Bet tokens on Blockchains depending on result, using Oracles. ❌
->>>>>>> e1e026e2c450ecb9d38884f66f3859fbb1d720f7

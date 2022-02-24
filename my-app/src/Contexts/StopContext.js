@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const initialContext = {}
+const initialContext = []
 
 export const stopContext = React.createContext();
 

@@ -26,4 +26,4 @@ const bounds = [
     }
 ]
 
-module.exports = { bounds, context, info, legs, location, stops, timeCET, pathLat, pathLng, api_key }
+module.exports = { bounds, context, info, legs, location, stops, timeCET, pathLat, pathLng }

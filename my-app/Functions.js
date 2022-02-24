@@ -1,7 +1,7 @@
 require('dotenv').config();
 const https = require('https')
 const express = require('express');
-const { bounds, context, info, legs, location, stops, timeCET, pathLat, pathLng, api_key } = require('./Variables');
+const { bounds, context, info, legs, location, stops, timeCET, pathLat, pathLng } = require('./Variables');
 
 // Queries the soonest available trip that has not departed yet
 

@@ -48,7 +48,7 @@ function App() {
             Duration:
           </div>
           <div className="Trip-child">
-            Stops: {stops.map((stop) => <div className="Stops">{stop.name}</div>)}
+            Stops: {stops.length != undefined ? stops.map((stop) => <div className="Stops">{stop.name}</div>) : <div>Loading</div>}
           </div>
         </div>
         {/* <div className="Trip-previous">
