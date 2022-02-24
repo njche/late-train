@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
-import { useState } from "react/cjs/react.development";
+import { useState, useContext } from "react/cjs/react.development";
+import { dateContext } from "../Contexts/DateContext";
 
 const Time = () => {
     const [time, setTime] = useState('')
+    const [start, setStart] = useContext(dateContext)
     
     function currentTime() {
         let date = new Date(); 
@@ -23,6 +25,7 @@ const Time = () => {
 
     useEffect(() => {
         currentTime()
+        console.log(start)
     }, [])
 
     return (

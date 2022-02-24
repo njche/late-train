@@ -101,8 +101,6 @@ function MyComponent() {
 
     finishLine();
 
-    console.log(process.env.REACT_APP_GOOGLE_KEY)
-
   }, [])
 
   // google map ternary function/load map
