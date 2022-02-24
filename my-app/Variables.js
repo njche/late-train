@@ -1,5 +1,4 @@
 require('dotenv').config();
-const api_key = process.env.NS_APP_API_KEY;
 const stops = {};
 const context = {};
 const timeCET = {};

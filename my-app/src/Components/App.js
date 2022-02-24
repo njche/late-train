@@ -15,10 +15,10 @@ function App() {
     const json = await response.json()
     // Grabbing time for DateContext
     setStart({ origin: {
-      plannedDateTime: json.data.legs[0].origin.plannedDateTime
+      plannedDateTime: json.data.legs[0].origin.plannedDateTime.slice(11,19)
     },
       destination: {
-        plannedDateTime: json.data.legs[0].destination.plannedDateTime
+        plannedDateTime: json.data.legs[0].destination.plannedDateTime.slice(11,19)
       }
     });
     setStops(json.data.legs[json.data.legs.length - 1].stops)
@@ -27,6 +27,7 @@ function App() {
   useEffect(() => {
     fetchTrip();
     console.log('fetched!')
+    console.log(stops)
   }, [status])
 
   
@@ -34,9 +35,33 @@ function App() {
 
 
   return (
-      <div className="App-header">
-        <p>Departure: {start.origin.plannedDateTime} CET</p>
-        <p>ETA Arrival: {start.destination.plannedDateTime} CET</p>
+      <div>
+        <div className="App-header">
+          <p>Departure: {start.origin.plannedDateTime} CET</p>
+          <p>ETA Arrival: {start.destination.plannedDateTime} CET</p>
+        </div>
+        <div className="Trip-current">
+          <h1 className="Trip-header">
+            Current trip
+          </h1>
+          <div className="Trip-child">
+            Duration:
+          </div>
+          <div className="Trip-child">
+            Stops: {stops.map((stop) => <div className="Stops">{stop.name}</div>)}
+          </div>
+        </div>
+        {/* <div className="Trip-previous">
+          <h1 className="Trip-header">
+            Previous trip
+          </h1>
+          <div className="Trip-child">
+            Duration:
+          </div>
+          <div className="Trip-child">
+            Stop Count:
+          </div>
+        </div> */}
       </div>
   );
 }
