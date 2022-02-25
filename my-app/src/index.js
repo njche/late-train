@@ -7,19 +7,22 @@ import Time from './Components/Time'
 import StopContext from './Contexts/StopContext'
 import DateContext from './Contexts/DateContext';
 import StatusContext from './Contexts/StatusContext';
+import TimeContext from './Contexts/TimeContext';
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <StatusContext>
-      <DateContext>
-        <StopContext>
-          <Time />
-          <App />
-          <Map />
-        </StopContext>
-      </DateContext>
-    </StatusContext>
+    <TimeContext>
+      <StatusContext>
+        <DateContext>
+          <StopContext>
+            <Time />
+            <App />
+            <Map />
+          </StopContext>
+        </DateContext>
+      </StatusContext>
+    </TimeContext>
   </React.StrictMode>,
   document.getElementById('root')
 );
