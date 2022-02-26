@@ -35,12 +35,12 @@ function App() {
   }, [status])
 
   useEffect(() => {
-    let startTimeM = start.origin.plannedDateTime.slice(3,5)
-    let startTimeS = start.origin.plannedDateTime.slice(6,8)
+    let startTimeMinutes = start.origin.plannedDateTime.slice(3,5)
+    let startTimeSeconds = start.origin.plannedDateTime.slice(6,8)
 
     setDuration({ 
-      seconds: (parseInt(time.slice(6,8)) - parseInt(startTimeS)),
-      minutes: (parseInt(time.slice(3,5)) - parseInt(startTimeM)),
+      seconds: (parseInt(time.slice(6,8)) - parseInt(startTimeSeconds)),
+      minutes: (parseInt(time.slice(3,5)) - parseInt(startTimeMinutes)),
       hours: hour
     })
     
