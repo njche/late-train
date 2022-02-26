@@ -26,17 +26,9 @@ const Time = () => {
         currentTime()
     }, [])
 
-    useEffect(() => {
-        let startTimeH = start.origin.plannedDateTime.slice(0,2)
-        let startTimeM = start.origin.plannedDateTime.slice(3,5)
-        let startTimeS = start.origin.plannedDateTime.slice(6,8)
-        setDuration((parseInt(time.slice(6,8)) - parseInt(startTimeS)))
-    }, [time])
-
     return (
         <div>
             {time} CET Local Time
-            <div>{duration}</div>
         </div>
     )
 }

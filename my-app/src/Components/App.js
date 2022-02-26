@@ -2,12 +2,16 @@ import React, { useState, useEffect, useContext } from 'react'
 import { stopContext } from '../Contexts/StopContext'
 import { dateContext } from '../Contexts/DateContext'
 import { statusContext } from '../Contexts/StatusContext'
+import { timeContext } from '../Contexts/TimeContext'
 import '../Styles/App.css'
 
 function App() {
   const [stops, setStops] = useContext(stopContext)
   const [start, setStart] = useContext(dateContext)
   const [status, setStatus] = useContext(statusContext)
+  const [time, setTime] = useContext(timeContext)
+  const [duration, setDuration] = useState({})
+  const [hour, setHour] = useState(0)
   
   const fetchTrip = async () => {   
     // API call for trip details
@@ -30,6 +34,24 @@ function App() {
     console.log(stops)
   }, [status])
 
+  useEffect(() => {
+    let startTimeM = start.origin.plannedDateTime.slice(3,5)
+    let startTimeS = start.origin.plannedDateTime.slice(6,8)
+
+    setDuration({ 
+      seconds: (parseInt(time.slice(6,8)) - parseInt(startTimeS)),
+      minutes: (parseInt(time.slice(3,5)) - parseInt(startTimeM)),
+      hours: hour
+    })
+    
+    if (duration.minutes == 59 || -1) {
+      duration.minutes - duration.seconds === -59 || 0 ? setHour(hour + 1) : setHour(hour)
+    } else {
+      setHour(hour)
+    }
+
+
+}, [time])
   
     // gettreininformatie_2, idea for feature. Not high priority
 
@@ -45,7 +67,12 @@ function App() {
             Current trip
           </h1>
           <div className="Trip-child">
-            Duration:
+            Duration: 
+              <p>
+                +{duration.hours < 10 ? "0" + duration.hours : duration.hours}:
+                {duration.minutes < 0 ? duration.minutes + 60: duration.minutes < 10 ? "0" + duration.minutes : duration.minutes}:
+                {duration.seconds < 10 ? "0" + duration.seconds : duration.seconds}
+              </p>
           </div>
           <div className="Trip-child">
             Stops: {stops.length != undefined ? stops.map((stop) => <div className="Stops">{stop.name}</div>) : <div>Loading</div>}
