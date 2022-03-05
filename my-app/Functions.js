@@ -1,7 +1,8 @@
 require('dotenv').config();
 const https = require('https')
 const express = require('express');
-const { bounds, context, info, legs, location, stops, timeCET, pathLat, pathLng } = require('./Variables');
+const { bounds, context, info, legs, location, stops, time, pathLat, pathLng } = require('./Variables');
+let count = 0
 
 // Queries the soonest available trip that has not departed yet
 
@@ -29,8 +30,9 @@ getContext = () => {
        
         res.on('end', () => {
             const data = JSON.parse(str)
-            if (data.trips[0].legs.length > 1) {
-                context.payload = data.trips[1].ctxRecon
+            if (data.trips[0] === undefined) {
+                location.status = 'Waiting for departure'
+                setTimeout(getContext, 10000)
             } else {
                 context.payload = data.trips[0].ctxRecon
             }  
@@ -90,7 +92,7 @@ function getTrip(query) {
 
 }
 
-// Grabs all current active trains, then interrates through and gives us location of the train for our trip
+// Grabs all current active trains, then iterates through and gives us location of the train for our trip
 getLocation = () => {
     const options = {
         hostname: 'gateway.apiportal.ns.nl',
@@ -178,19 +180,45 @@ function currentTime() {
     let hh = date.getUTCHours() + 1;
     let mm = date.getUTCMinutes();
     let ss = date.getUTCSeconds();
-    let session = "CET"
     
     hh = (hh > 23) ? h = "0" : hh;
     hh = (hh < 10) ? "0" + hh : hh;
     mm = (mm < 10) ? "0" + mm : mm;
     ss = (ss < 10) ? "0" + ss : ss;
       
-    timeCET.now = hh + ":" + mm + ":" + ss + " " + session;
+    time.now = hh + ":" + mm + ":" + ss;
+
+    console.log(time.now);
+
+    time.now === time.startTime ? count = 0 : false;
+
+    info.info !== undefined ? duration(count)
+    : console.log("undefined")
     
     let t = setTimeout(function(){ currentTime() }, 1000);
 }
-  
 
+function duration(x) {
+    // EXPAND ON THIS FUNCTION
+    // add logic when to start duration timer
+    // if minutes is -, + 60
+    let mmDuration = info.info.legs[0].origin.plannedDateTime.slice(14,16);
+    let ssDuration = info.info.legs[0].origin.plannedDateTime.slice(17,19);
+
+    time.startTime = info.info.legs[0].origin.plannedDateTime.slice(11,19);
+    time.durationHours = x;
+    time.durationMinutes = parseInt(time.now.slice(3,5)) - parseInt(mmDuration);
+    time.durationSeconds = parseInt(time.now.slice(6,8)) - ssDuration;
+
+    time.durationMinutes < 0 ? time.durationMinutes += 60 : time.durationMinutes
+
+    if (time.durationMinutes === 59 || time.durationMinutes === -1) {
+        time.durationMinutes - time.durationSeconds === -60 ? count++ : false
+    }
+
+    console.log(time.durationMinutes - time.durationSeconds)
+    console.log(time);
+}
 
 
 module.exports = { getContext, sortBounds, currentTime }

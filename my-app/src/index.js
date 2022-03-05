@@ -18,7 +18,6 @@ ReactDOM.render(
           <StopContext>
             <Time />
             <App />
-            <Map />
           </StopContext>
         </DateContext>
       </StatusContext>

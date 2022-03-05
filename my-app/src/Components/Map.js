@@ -7,9 +7,10 @@ import MapStyles from '../Styles/MapStyles';
 import '../Styles/Map.css'
 
 // map container
+
 const containerStyle = {
-  width: 1000,
-  height: 600
+  width: 'fit-content(20em)',
+  height: 'fit-content(20em)'
 };
 
 // center of map after load
@@ -111,9 +112,9 @@ function MyComponent() {
 
 
   return isLoaded ? (
-    <div className="Map-container">
       <GoogleMap
         mapContainerStyle={containerStyle}
+        mapContainerClassName='Map-container'
         options={{ styles: MapStyles }}
         defaultCenter={center}
         center={center}
@@ -157,7 +158,6 @@ function MyComponent() {
           { /* Child components, such as markers, info windows, etc. */ }
           <></>
         </GoogleMap>
-      </div>
       ) : <></>
 }
 

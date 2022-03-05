@@ -1,7 +1,7 @@
 require('dotenv').config();
 require('./Context')
 const app = require('express')();
-const { legs, location, context, info, stops, timeCET } = require('./Variables')
+const { legs, location, context, info, stops, time } = require('./Variables')
 const functions = require('./Functions');
 const PORT = 8080;
 
@@ -18,7 +18,7 @@ app.use(function(req, res, next) {
 
 app.get('/time', (req, res) => {
     res.status(200).send({
-        data: timeCET.now
+        data: time
     });
 })
 

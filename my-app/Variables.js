@@ -1,7 +1,7 @@
 require('dotenv').config();
 const stops = {};
 const context = {};
-const timeCET = {};
+const time = {};
 const info = {};
 const legs = {};
 const location = {};
@@ -26,4 +26,4 @@ const bounds = [
     }
 ]
 
-module.exports = { bounds, context, info, legs, location, stops, timeCET, pathLat, pathLng }
+module.exports = { bounds, context, info, legs, location, stops, time, pathLat, pathLng }
