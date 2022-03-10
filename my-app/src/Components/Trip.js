@@ -2,22 +2,26 @@ import React, { useContext, useEffect, useState } from 'react'
 import { stopContext } from '../Contexts/StopContext'
 import { dateContext } from "../Contexts/DateContext";
 import { timeContext } from "../Contexts/TimeContext";
+import { statusContext } from '../Contexts/StatusContext'
 import '../Styles/App.css'
 
 function Trip() {
+    const [status, setStatus] = useContext(statusContext)
     const [stops, setStops] = useContext(stopContext)
     const [start, setStart] = useContext(dateContext)
     const [time, setTime] = useContext(timeContext)
     const [duration, setDuration] = useState('')
 
     const tripDuration = async () => {
-        setDuration(time)
-        console.log(duration)
+      const response = await fetch('http://localhost:8080/time')
+      const json = await response.json()
+      setDuration(json.data)
+      setTimeout(tripDuration, 1000)
     }
 
     useEffect(() => {
         tripDuration()
-    }, [time])
+    }, [])
 
     return(
         <div className="Trip-current">

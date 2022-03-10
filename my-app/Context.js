@@ -4,10 +4,11 @@ const express = require('express');
 const app = express();
 const functions = require('./Functions')
 
+functions.currentTime()
+
 functions.sortBounds()
 
 functions.getContext()
 
-functions.currentTime()
 
 // WRITE OUT ON WHITEBOARD

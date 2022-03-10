@@ -115,6 +115,11 @@ getLocation = () => {
         // Parse compatible JSON data
         res.on('end', () => {
             const trains = JSON.parse(str)
+            let h = Number(time.now.slice(0,2))
+            let m = Number(time.now.slice(3,5))
+            let s = Number(time.now.slice(6,8))
+            let dHours = Number(time.startTime.slice(0,2))
+            let dMinutes = Number(time.startTime.slice(3,5))
 
             // Grabs lat, lng. Adds to location Object
             for (i = 0; i < trains.payload.treinen.length; i++) {
@@ -125,11 +130,16 @@ getLocation = () => {
                 }
             }
 
+            // changes status wether if its trips planned departure time or not
+            if (((h - dHours) + (m - dMinutes)) >= 0) {
+                location.status = 'Active'
+            } else {
+                location.status = 'Waiting for departure'
+            }
+            
             // logic wether GPS is active or has not departed
             if (location.lat === undefined) {
                 location.status = 'Waiting for departure'
-            } else {
-                location.status = 'Active'
             }
 
             // logic to determine wether or not train is at destination
@@ -215,9 +225,6 @@ function duration(x) {
     if (time.durationMinutes === 59 || time.durationMinutes === -1) {
         time.durationMinutes - time.durationSeconds === -60 ? count++ : false
     }
-
-    console.log(time.durationMinutes - time.durationSeconds)
-    console.log(time);
 }
 
 
