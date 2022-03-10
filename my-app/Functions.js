@@ -131,11 +131,15 @@ getLocation = () => {
             }
 
             // changes status wether if its trips planned departure time or not
-            if (((h - dHours) + (m - dMinutes)) >= 0) {
-                location.status = 'Active'
-            } else {
-                location.status = 'Waiting for departure'
-            }
+            // if (((h - dHours) + (m - dMinutes)) >= 0) {
+            //     location.status = 'Active'
+            // } else {
+            //     location.status = 'Waiting for departure'
+            // }
+            h - dHours > 0 ? location.status = 'Active' :
+                h - dHours === 0 ? m - dMinutes >= 0 ? location.status = 'Active' :
+                    location.status = 'Waiting for departure' :
+                    location.status = 'Waiting for departure'
             
             // logic wether GPS is active or has not departed
             if (location.lat === undefined) {
