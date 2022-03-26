@@ -42,6 +42,7 @@
 
 .Info-container {
   display: flex;
+  justify-content: center;
   padding-left: 5%;
   padding-right: 5%
 }

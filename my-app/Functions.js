@@ -92,6 +92,22 @@ function getTrip(query) {
 
 }
 
+function duration(x) {
+    let mmDuration = info.info.legs[0].origin.plannedDateTime.slice(14,16);
+    let ssDuration = info.info.legs[0].origin.plannedDateTime.slice(17,19);
+
+    time.startTime = info.info.legs[0].origin.plannedDateTime.slice(11,19);
+    time.durationHours = x;
+    time.durationMinutes = parseInt(time.now.slice(3,5)) - parseInt(mmDuration);
+    time.durationSeconds = parseInt(time.now.slice(6,8)) - ssDuration;
+
+    time.durationMinutes < 0 ? time.durationMinutes += 60 : time.durationMinutes
+
+    if (time.durationMinutes === 59 || time.durationMinutes === -1) {
+        time.durationMinutes - time.durationSeconds === -60 ? count++ : false
+    }
+}
+
 // Grabs all current active trains, then iterates through and gives us location of the train for our trip
 getLocation = () => {
     const options = {
@@ -118,8 +134,8 @@ getLocation = () => {
             let h = Number(time.now.slice(0,2))
             let m = Number(time.now.slice(3,5))
             let s = Number(time.now.slice(6,8))
-            let dHours = Number(time.startTime.slice(0,2))
-            let dMinutes = Number(time.startTime.slice(3,5))
+            let dHours = Number(info.info.legs[0].origin.plannedDateTime.slice(11,13))
+            let dMinutes = Number(info.info.legs[0].origin.plannedDateTime.slice(14,16))
 
             // Grabs lat, lng. Adds to location Object
             for (i = 0; i < trains.payload.treinen.length; i++) {
@@ -131,11 +147,6 @@ getLocation = () => {
             }
 
             // changes status wether if its trips planned departure time or not
-            // if (((h - dHours) + (m - dMinutes)) >= 0) {
-            //     location.status = 'Active'
-            // } else {
-            //     location.status = 'Waiting for departure'
-            // }
             h - dHours > 0 ? location.status = 'Active' :
                 h - dHours === 0 ? m - dMinutes >= 0 ? location.status = 'Active' :
                     location.status = 'Waiting for departure' :
@@ -170,10 +181,9 @@ getLocation = () => {
 
 const checkStatus = (status) => {
     if (status !== 'Arrived') {
-        setTimeout(getLocation, 3000)
-    } else {
-        setTimeout(getContext, 6000)
+        return setTimeout(getLocation, 3000)
     }
+    return setTimeout(getContext, 6000)
 }
 
 function sortBounds() {
@@ -209,26 +219,7 @@ function currentTime() {
     info.info !== undefined ? duration(count)
     : console.log("undefined")
     
-    let t = setTimeout(function(){ currentTime() }, 1000);
-}
-
-function duration(x) {
-    // EXPAND ON THIS FUNCTION
-    // add logic when to start duration timer
-    // if minutes is -, + 60
-    let mmDuration = info.info.legs[0].origin.plannedDateTime.slice(14,16);
-    let ssDuration = info.info.legs[0].origin.plannedDateTime.slice(17,19);
-
-    time.startTime = info.info.legs[0].origin.plannedDateTime.slice(11,19);
-    time.durationHours = x;
-    time.durationMinutes = parseInt(time.now.slice(3,5)) - parseInt(mmDuration);
-    time.durationSeconds = parseInt(time.now.slice(6,8)) - ssDuration;
-
-    time.durationMinutes < 0 ? time.durationMinutes += 60 : time.durationMinutes
-
-    if (time.durationMinutes === 59 || time.durationMinutes === -1) {
-        time.durationMinutes - time.durationSeconds === -60 ? count++ : false
-    }
+    setTimeout(function(){ currentTime() }, 1000);
 }
 
 

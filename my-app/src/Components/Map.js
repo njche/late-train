@@ -73,12 +73,9 @@ function MyComponent() {
       setStatus(json.data.status)
       setLocation(json.data)
     }
-
     console.log(location)
     console.log(status)
-    
     setTimeout(fetchLocation, 2500)
-    
   }, [location])
 
   
@@ -88,15 +85,19 @@ function MyComponent() {
   useEffect(() => {
     const finishLine = () => {
       let arr = [];
+
       for (let i = 0; i < paths.length; i++) {
         arr.push(paths[i].lat)
       }
+
       arr.sort((a, b) => { return a - b;})
       setPathsLat(arr);
       arr = [];
+
       for (let i = 0; i < paths.length; i++) {
         arr.push(paths[i].lng)
       }
+      
       setPathsLng(arr);
     }
 
