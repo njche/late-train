@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Trip from './Trip'
 import Map from './Map'
+import Vote from './Vote'
 import { stopContext } from '../Contexts/StopContext'
 import { dateContext } from '../Contexts/DateContext'
 import { statusContext } from '../Contexts/StatusContext'
@@ -45,6 +46,7 @@ function App() {
           <p>ETA Arrival: {start.destination.plannedDateTime} CET</p>
         </div>
         <div className="Info-container">
+          <Vote />
           <Map />
           <Trip />
         </div>

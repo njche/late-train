@@ -51,10 +51,10 @@
   color: rgb(0, 0, 0);
   display: grid;
   float: right;
-  max-width: 50vh;
-  min-width: none;
+  width: 10%;
+  min-width: 130px;
   background-color: #ffffff;
-  justify-content: right;
+  justify-content: center;
   padding: 2%;
   margin: 2%;
   border: lightgray;
@@ -79,6 +79,10 @@
 }
 
 .Trip-header {
+  font: 1.9em 'Segoe UI';
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
   margin: 0%;
   padding: 0%;
 }
@@ -99,4 +103,30 @@
   font: caption;
   font-size: small;
   padding-top: 5px;
+}
+
+.Vote-header {
+  font: 1.9em 'Segoe UI';
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+  margin: 0%;
+  padding: 0%;
+}
+
+.Vote-current {
+  color: rgb(0, 0, 0);
+  display: grid;
+  float: right;
+  width: 10%;
+  min-width: 130px;
+  height: fit-content;
+  background-color: #ffffff;
+  justify-content: center;
+  padding: 2%;
+  margin: 2%;
+  border: lightgray;
+  border-style: solid;
+  border-width: 5px;
+  border-radius: 5px;
 }

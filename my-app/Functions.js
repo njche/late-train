@@ -19,6 +19,7 @@ getContext = () => {
     
     const req = https.get(contextOptions, res => {
         console.log('Getting trip');
+        let x = 0;
         
         // Make data JSON compatible
         let str = '';
@@ -30,13 +31,19 @@ getContext = () => {
        
         res.on('end', () => {
             const data = JSON.parse(str)
-            if (data.trips[0] === undefined) {
+            if (!data.trips) {
                 location.status = 'Waiting for departure'
                 setTimeout(getContext, 10000)
-            } else {
-                context.payload = data.trips[0].ctxRecon
-            }  
+            }
+
+            if (data.trips[x].legs[0].destination.name != 'Utrecht Centraal') {
+                location.status = 'Waiting for departure'
+                setTimeout(getContext, 10000)
+            }
             
+            console.log(data.trips[x].legs[0].destination.name)
+
+            context.payload = data.trips[0].ctxRecon
             
             // triggers next query function
             
@@ -201,7 +208,7 @@ function sortBounds() {
 
 function currentTime() {
     let date = new Date(); 
-    let hh = date.getUTCHours() + 1;
+    let hh = date.getUTCHours() + 2;
     let mm = date.getUTCMinutes();
     let ss = date.getUTCSeconds();
     
