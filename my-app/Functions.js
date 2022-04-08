@@ -36,7 +36,7 @@ getContext = () => {
                 setTimeout(getContext, 10000)
             }
 
-            if (data.trips[x].legs[0].destination.name != 'Utrecht Centraal') {
+            if (data.trips[x].legs[0].destination.name !== 'Utrecht Centraal') {
                 location.status = 'Waiting for departure'
                 setTimeout(getContext, 10000)
             }
@@ -153,15 +153,16 @@ getLocation = () => {
                 }
             }
 
-            // changes status wether if its trips planned departure time or not
+            // changes status wether if clock is equal to trips planned departure time or not
             h - dHours > 0 ? location.status = 'Active' :
                 h - dHours === 0 ? m - dMinutes >= 0 ? location.status = 'Active' :
                     location.status = 'Waiting for departure' :
                     location.status = 'Waiting for departure'
             
             // logic wether GPS is active or has not departed
-            if (location.lat === undefined) {
+            if (!location.lat) {
                 location.status = 'Waiting for departure'
+                return getContext()
             }
 
             // logic to determine wether or not train is at destination
