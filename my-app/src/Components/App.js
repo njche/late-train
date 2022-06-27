@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
 import Trip from './Trip'
 import Map from './Map'
 import Vote from './Vote'
+import { Web3Client } from './Web3'
 import { stopContext } from '../Contexts/StopContext'
 import { dateContext } from '../Contexts/DateContext'
 import { statusContext } from '../Contexts/StatusContext'
@@ -28,13 +29,17 @@ function App() {
     });
     // Stops for trip
     setStops(json.data.legs[json.data.legs.length - 1].stops)
+    console.log(json)
 }
 
   useEffect(() => {
     fetchTrip();
-    console.log('fetched!')
     console.log(stops)
   }, [status])
+
+  useEffect(() => {
+    Web3Client()
+  }, [])
   
     // gettreininformatie_2, idea for feature. Not high priority
 
