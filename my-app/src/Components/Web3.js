@@ -1,4 +1,3 @@
-
 import Web3 from "web3";
 import BallotContractBuild from 'contracts/Ballot.json'
 
@@ -9,6 +8,7 @@ let ballotContract;
 export let initialized = false;
 
 export const Web3Client = async () => {
+    const constructorArgs = ["yes", "no"]  
     let provider = window.ethereum;
     if (typeof provider !== 'undefined') {
         provider
@@ -26,13 +26,17 @@ export const Web3Client = async () => {
         })
     }
     const web3 = new Web3(provider)
+
+    console.log(BallotContractBuild.networks)
     
     if (!provider) {
         initialized = false;
         console.log('Web3 not avaible on this browser')
     } else {
         const networkId = await web3.eth.net.getId()
-        ballotContract = new web3.eth.Contract(BallotContractBuild.abi, '0xc62dC58bA83Bfc7dD985C8aE6d2C0F087695c73B');
+        ballotContract = new web3.eth.Contract(BallotContractBuild.abi, "0xf8385Cfd5253eEF362b3e8f27389F95aBaE3c3c8");
+        console.log(BallotContractBuild.networks)
+        console.log(BallotContractBuild.updatedAt)
         initialized = true;
     }
 }

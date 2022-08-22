@@ -172,7 +172,6 @@ function duration() {
     }
 
     deadline = ((deadlineHour * 100) + deadlineMinute);
-    console.log(count)
 
     if (minutesBeforeDeadline > deadline) {
         if (time.day === startDay) {
@@ -308,8 +307,6 @@ function currentTime() {
     time.day = dd;
 
     console.log(time);
-    
-    time.now === time.startTime ? count = 0 : false;
     
     info.info !== undefined ? duration(count)
     : console.log("info undefined")
