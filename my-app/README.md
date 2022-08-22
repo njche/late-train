@@ -1,5 +1,5 @@
 # Late Train
-Late Train is an application where you can track a train heading from Eindhoven to Utrecht in real-time. Vote wether you think it will arrive on time or not.
+Late Train is an application where you can track a passanger train in the Netherlands in real-time. Vote wether you think it will arrive on time or not.
 
 ## Features
 

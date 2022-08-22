@@ -2,7 +2,6 @@ require('dotenv').config();
 const https = require('https')
 const express = require('express');
 const { bounds, context, info, legs, location, stops, time, pathLat, pathLng } = require('./Variables');
-const { Console } = require('console');
 let deadline;
 let count = 0
 let x = 0;
@@ -12,7 +11,7 @@ getContext = () => {
     const contextOptions = {
         hostname: 'gateway.apiportal.ns.nl',
         port: 443,
-        path: '/reisinformatie-api/api/v3/trips?lang=eng&fromStation=ehv&toStation=ut&originWalk=false&originBike=false&originCar=false&destinationWalk=false&destinationBike=false&destinationCar=false&shorterChange=false&travelAssistance=false&searchForAccessibleTrip=false&localTrainsOnly=false&excludeHighSpeedTrains=false&excludeTrainsWithReservationRequired=false&yearCard=false&discount=NO_DISCOUNT&travelClass=2&passing=false&travelRequestType=DEFAULT',
+        path: '/reisinformatie-api/api/v3/trips?lang=eng&fromStation=asd&toStation=ut&originWalk=false&originBike=false&originCar=false&destinationWalk=false&destinationBike=false&destinationCar=false&shorterChange=false&travelAssistance=false&searchForAccessibleTrip=false&localTrainsOnly=false&excludeHighSpeedTrains=false&excludeTrainsWithReservationRequired=false&yearCard=false&discount=NO_DISCOUNT&travelClass=2&passing=false&travelRequestType=DEFAULT',
         method: 'GET',
         headers: {
             'Ocp-Apim-Subscription-Key': process.env.API_KEY
