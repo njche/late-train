@@ -41,15 +41,28 @@ getContext = () => {
             
             if (!data.trips) {
                 location.status = 'No trip found';
+                console.log('No trip found');
+                console.log(location);
+                x += 1;
                 return getContext();
             }
             
             if (!data.trips[x].legs[0]) {
                 location.status = 'No legs found';
+                console.log('No legs found');
+                console.log(location);
+                x += 1;
                 return getContext();
             }
             
-            if (data.trips[x].legs[0].destination.name !== 'Utrecht Centraal') {
+            if (data.trips[x].legs[0].product.shortCategoryName === 'BUS') {
+                location.status = 'Waiting for departure';
+                x += 1;
+                console.log('Trip #', x);
+                return getContext();
+            }
+
+            if (data.trips[x].status === 'ALTERNATIVE_TRANSPORT') {
                 location.status = 'Waiting for departure';
                 x += 1;
                 console.log('Trip #', x);
@@ -233,9 +246,11 @@ getLocation = () => {
             // logic wether GPS is active or has not departed. If no GPS location, we call the initial getContext Function
             
             if (location.status === 'Active') {
-                typeof location.lat == 'undefined' ? 
-                    getContext() :
-                    false
+                if (typeof location.lat == 'undefined') {
+                    console.log('No GPS coordinates')
+                    x += 1;
+                    return getContext();
+                }
             }
 
             // logic to determine wether or not train is at destination
