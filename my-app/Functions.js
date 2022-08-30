@@ -188,6 +188,8 @@ function duration() {
     if (minutesBeforeDeadline > deadline) {
         if (time.day === startDay) {
             location.late = true;
+        } else {
+            location.late = false;
         }
     }
 }

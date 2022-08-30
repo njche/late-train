@@ -78,6 +78,7 @@ contract Ballot {
     function winningProposal() public view
             returns (uint winningProposal_) {
         uint winningVoteCount = proposals[0].voteCount;
+
         for (uint p = 0; p < proposals.length; p++) {
             if (proposals[p].voteCount != 0) {
                 if (proposals[p].voteCount > winningVoteCount) {
@@ -86,6 +87,11 @@ contract Ballot {
                 }
             }
         }
+
+        if (proposals[0].voteCount == proposals[1].voteCount) {
+            winningProposal_ = proposals.length - 1;
+        }
+
         if (winningVoteCount == 0) {
             winningProposal_ = proposals.length - 1;
         }
