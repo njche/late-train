@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext } from "react";
-import { timeContext } from "../Contexts/TimeContext";
+import React, { useEffect, useState, useContext } from "react"
+import { timeContext } from "../Contexts/TimeContext"
 
 function Time() {
     const [time, setTime] = useContext(timeContext)

@@ -2,11 +2,11 @@ import Web3 from "web3";
 import BallotContractBuild from 'contracts/Ballot.json'
 import BallotFactoryContractBuild from 'contracts/BallotFactory.json'
 
-let selectedAccount;
+let selectedAccount
 
-let factoryContract;
+let factoryContract
 
-export let initialized = false;
+export let initialized = false
 
 export const Web3Client = async () => {
     let provider = window.ethereum;
@@ -35,7 +35,7 @@ export const Web3Client = async () => {
         console.log('Web3 not avaible on this browser')
     } else {
         const networkId = await web3.eth.net.getId()
-        factoryContract = new web3.eth.Contract(BallotFactoryContractBuild.abi, "0x08Cf814FC5AfFB4D910E422F076431fC80b957f1");
+        factoryContract = new web3.eth.Contract(BallotFactoryContractBuild.abi, "0x08Cf814FC5AfFB4D910E422F076431fC80b957f1")
         console.log(BallotFactoryContractBuild.networks)
         console.log(BallotFactoryContractBuild.updatedAt)
         console.log(factoryContract.methods)
@@ -50,7 +50,7 @@ export const userVoteYes = async () => {
 
     factoryContract.methods
     .voteCurrentBallot(0)
-    .send({ from: selectedAccount });
+    .send({ from: selectedAccount })
 }
 
 export const userVoteNo = async () => {
@@ -60,7 +60,7 @@ export const userVoteNo = async () => {
 
     factoryContract.methods
     .voteCurrentBallot(1)
-    .send({ from: selectedAccount });
+    .send({ from: selectedAccount })
 }
 
 export const whoWon = async () => {
