@@ -6,14 +6,12 @@ import { statusContext } from '../Contexts/StatusContext'
 import '../Styles/App.css'
 
 function Trip() {
-    const [status, setStatus] = useContext(statusContext)
-    const [stops, setStops] = useContext(stopContext)
-    const [start, setStart] = useContext(dateContext)
-    const [time, setTime] = useContext(timeContext)
+    const [status] = useContext(statusContext)
+    const [stops] = useContext(stopContext)
     const [duration, setDuration] = useState('')
 
     const tripDuration = async () => {
-      const response = await fetch('http://localhost:8080/time')
+      const response = await fetch(process.env.REACT_APP_API_HOST + '/time')
       const json = await response.json()
       setDuration(json.data)
       setTimeout(tripDuration, 1000)

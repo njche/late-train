@@ -6,18 +6,16 @@ import { Web3Client } from './Web3'
 import { stopContext } from '../Contexts/StopContext'
 import { dateContext } from '../Contexts/DateContext'
 import { statusContext } from '../Contexts/StatusContext'
-import { timeContext } from '../Contexts/TimeContext'
 import '../Styles/App.css'
 
 function App() {
   const [stops, setStops] = useContext(stopContext)
   const [start, setStart] = useContext(dateContext)
-  const [status, setStatus] = useContext(statusContext)
-  const [time, setTime] = useContext(timeContext)
+  const [status] = useContext(statusContext)
   
   const fetchTrip = async () => {   
     // API call for trip details
-    const response = await fetch('http://localhost:8080/info');
+    const response = await fetch(process.env.REACT_APP_API_HOST + '/info')
     const json = await response.json()
     // Grabbing time for DateContext
     setStart({ origin: {
@@ -30,8 +28,8 @@ function App() {
     // Stops for trip
     setStops(json.data.legs[json.data.legs.length - 1].stops)
     console.log(json)
-}
-
+  }
+  
   useEffect(() => {
     fetchTrip();
     console.log(stops)

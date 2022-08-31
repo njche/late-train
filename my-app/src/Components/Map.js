@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext} from 'react'
-import { GoogleMap, useJsApiLoader, Marker, Polygon } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker, Polygon } from '@react-google-maps/api'
 import { stopContext } from '../Contexts/StopContext'
-import { dateContext } from '../Contexts/DateContext'
 import { statusContext } from '../Contexts/StatusContext'
-import MapStyles from '../Styles/MapStyles';
+import MapStyles from '../Styles/MapStyles'
 import '../Styles/Map.css'
 
 // map container
@@ -55,8 +54,7 @@ const polygonOptions = {
 
 
 function MyComponent() {
-  const [stops, setStops] = useContext(stopContext)
-  const [start, setStart] = useContext(dateContext)
+  const [stops] = useContext(stopContext)
   const [status, setStatus] = useContext(statusContext)
   
   // variable to store the GPS location
@@ -68,7 +66,7 @@ function MyComponent() {
   
   useEffect(() => {
     const fetchLocation = async () => {   
-      const response = await fetch('http://localhost:8080/location');
+      const response = await fetch(process.env.REACT_APP_API_HOST + '/location');
       const json = await response.json()
       setStatus(json.data.status)
       setLocation(json.data)

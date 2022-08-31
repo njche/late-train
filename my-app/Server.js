@@ -11,11 +11,11 @@ app.listen(
 )
 
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "3.142.51.236"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Origin", process.env.WEB_HOST); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
-  });
-
+});
+console.log(process.env.REACT_APP_API_HOST)
 app.get('/time', (req, res) => {
     res.status(200).send({
         data: time

@@ -153,6 +153,7 @@ function getTrip(query) {
         })
         req.on('error', error => {
             console.error(error);
+            return getContext()
         })    
     })
 

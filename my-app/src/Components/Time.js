@@ -5,7 +5,7 @@ function Time() {
     const [time, setTime] = useContext(timeContext)
     
     async function currentTime() {
-        const response = await fetch('http://localhost:8080/time')
+        const response = await fetch(process.env.REACT_APP_API_HOST + '/time')
         const json = await response.json()
         setTime(json.data) 
         setTimeout(currentTime, 1000)
