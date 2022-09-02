@@ -25,17 +25,17 @@ const eindhoven = {
 };
 
 // destination
-const utrecht = {
+const finish = {
   lat: 52.0888900756836,
   lng: 5.11027765274048
 };
 
 // coordinates the shape the finish line/Polygon
 const paths = [
-  { lat: utrecht.lat - 0.0012, lng: utrecht.lng - 0.0005 },
-  { lat: utrecht.lat + 0.0004, lng: utrecht.lng - 0.002 },
-  { lat: utrecht.lat + 0.0012, lng: utrecht.lng + 0.0005 },
-  { lat: utrecht.lat - 0.00035, lng: utrecht.lng + 0.002 }
+  { lat: finish.lat - 0.0012, lng: finish.lng - 0.0005 },
+  { lat: finish.lat + 0.0004, lng: finish.lng - 0.002 },
+  { lat: finish.lat + 0.0012, lng: finish.lng + 0.0005 },
+  { lat: finish.lat - 0.00035, lng: finish.lng + 0.002 }
 ]
 
 // options for polygon
@@ -95,7 +95,6 @@ function MyComponent() {
       for (let i = 0; i < paths.length; i++) {
         arr.push(paths[i].lng)
       }
-      
       setPathsLng(arr);
     }
 
