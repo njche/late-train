@@ -225,11 +225,11 @@ getLocation = () => {
         // Parse compatible JSON data
         res.on('end', () => {
             const trains = JSON.parse(str);
-            let h = Number(time.now.slice(0,2));
-            let m = Number(time.now.slice(3,5));
+            let currentHour = Number(time.now.slice(0,2));
+            let currentMinute = Number(time.now.slice(3,5));
             let startDay = Number(info.info.legs[0].origin.plannedDateTime.slice(8,10));
-            let dHours = Number(info.info.legs[0].origin.plannedDateTime.slice(11,13));
-            let dMinutes = Number(info.info.legs[0].origin.plannedDateTime.slice(14,16));
+            let startHour = Number(info.info.legs[0].origin.plannedDateTime.slice(11,13));
+            let startMinute = Number(info.info.legs[0].origin.plannedDateTime.slice(14,16));
 
             // Grabs lat, lng. Adds to location Object
             for (i = 0; i < trains.payload.treinen.length; i++) {
@@ -240,10 +240,10 @@ getLocation = () => {
                 }
             }
 
-            // changes status wether if clock is equal to trips planned departure time or not
+            // changes train status whether if clock is equal to trips planned departure time or not
             if (time.day === startDay) {
-                h - dHours > 0 ? location.status = 'Active' :
-                h - dHours === 0 ? m - dMinutes >= 0 ? location.status = 'Active' :
+                currentHour - startHour > 0 ? location.status = 'Active' :
+                currentHour - startHour === 0 ? currentMinute - startMinute >= 0 ? location.status = 'Active' :
                 location.status = 'Waiting for departure' :
                 location.status = 'Waiting for departure'
             }
@@ -252,7 +252,7 @@ getLocation = () => {
                 location.status = 'Waiting for departure'
             }
 
-            // logic wether GPS is active or has not departed. If no GPS location, we call the initial getContext Function            
+            // logic for GPS, if it's active or has not departed. If no GPS location, we call the initial getContext() Function            
             if (location.status === 'Active') {
                 if (typeof location.lat == 'undefined') {
                     console.log('No GPS coordinates')
@@ -261,7 +261,7 @@ getLocation = () => {
                 }
             }
 
-            // logic to determine wether or not train is at destination
+            // logic to determine whether or not train is at destination
             if (location.lat <= pathLat[pathLat.length - 1] && location.lat >= pathLat[0]) {
                 if (location.lng <= pathLng[pathLng.length - 1] && location.lng >= pathLng[0]) {
                     location.status = 'Arrived';
@@ -313,27 +313,27 @@ function sortBounds() {
 
 function currentTime() {
     let date = new Date();
-    let dd = date.getUTCDate();
-    let hh = date.getUTCHours() + 2;
-    let mm = date.getUTCMinutes();
-    let ss = date.getUTCSeconds();
+    let day = date.getUTCDate();
+    let hour = date.getUTCHours() + 2;
+    let minute = date.getUTCMinutes();
+    let second = date.getUTCSeconds();
     
-    dd = (date.getUTCHours() > 21) ? dd = dd + 1 : dd;
-    hh = (hh > 23) ? h = "0" : hh;
-    hh = (hh < 10) ? "0" + hh : hh;
-    mm = (mm < 10) ? "0" + mm : mm;
-    ss = (ss < 10) ? "0" + ss : ss;
+    day = (date.getUTCHours() > 21) ? day = day + 1 : day;
+    hour = (hour > 23) ? h = "0" : hour;
+    hour = (hour < 10) ? "0" + hour : hour;
+    minute = (minute < 10) ? "0" + minute : minute;
+    second = (second < 10) ? "0" + second : second;
     
-    time.now = hh + ":" + mm + ":" + ss;
+    time.now = hour + ":" + minute + ":" + second;
 
-    time.day = dd;
+    time.day = day;
 
     console.log(time);
     
-    info.info !== undefined ? duration(count)
-    : console.log("info undefined")
+    info.info !== undefined ? duration(count):
+    console.log("info undefined")
     
-    setTimeout(function(){ currentTime() }, 1000);
+    setTimeout(function() { currentTime() }, 1000);
 }
 
 

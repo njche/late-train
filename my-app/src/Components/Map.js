@@ -32,7 +32,6 @@ const polygonOptions = {
 }
 
 function MyComponent() {
-  let newCenter
   const [stops] = useContext(stopContext)
   const [status, setStatus] = useContext(statusContext)
   
@@ -43,18 +42,19 @@ function MyComponent() {
   const [, setPathsLat] = useState({})
   const [, setPathsLng] = useState({})
   
-  // this hook is grabbing the GPS data from the server, data fetches every ~2.5 seconds
+  // this is grabbing the GPS data from the server, data fetches every ~2.5 seconds after called in useEffect
+  const fetchLocation = async () => {   
+    const locationData = await fetch(process.env.REACT_APP_API_HOST + '/location');
+    const json = await locationData.json()
+    const infoData = await fetch(process.env.REACT_APP_API_HOST + '/info')
+    const infoJson = await infoData.json()
+    setStatus(json.data.status)
+    setLocation(json.data)
+    setStart(infoJson.data.legs[0].origin)
+    setFinish(infoJson.data.legs[infoJson.data.legs.length - 1].destination)
+  }
+
   useEffect(() => {
-    const fetchLocation = async () => {   
-      const locationData = await fetch(process.env.REACT_APP_API_HOST + '/location');
-      const json = await locationData.json()
-      const infoData = await fetch(process.env.REACT_APP_API_HOST + '/info')
-      const infoJson = await infoData.json()
-      setStatus(json.data.status)
-      setLocation(json.data)
-      setStart(infoJson.data.legs[0].origin)
-      setFinish(infoJson.data.legs[infoJson.data.legs.length - 1].destination)
-    }
     console.log(location)
     console.log(status)
     setTimeout(fetchLocation, 2500)
@@ -71,19 +71,19 @@ function MyComponent() {
   // sorts lat and lon arr
   useEffect(() => {
     const finishLine = () => {
-      let arr = [];
+      let arr = []
       for (let i = 0; i < paths.length; i++) {
         arr.push(paths[i].lat)
       }
       arr.sort((a, b) => { return a - b;})
-      setPathsLat(arr);
-      arr = [];
+      setPathsLat(arr)
+      arr = []
       for (let i = 0; i < paths.length; i++) {
         arr.push(paths[i].lng)
       }
-      setPathsLng(arr);
+      setPathsLng(arr)
     }
-    finishLine();
+    finishLine()
   }, [])
 
   // google map ternary function/load map
@@ -157,6 +157,7 @@ function MyComponent() {
               }
           />))
         }
+        { /*s Polygon is the green "finish line shown at destination on google maps" */ }
         <Polygon 
           paths={paths}
           options={polygonOptions}

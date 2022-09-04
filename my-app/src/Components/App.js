@@ -13,10 +13,11 @@ function App() {
   const [start, setStart] = useContext(dateContext)
   const [status] = useContext(statusContext)
   
+  // API call for trip details
   const fetchTrip = async () => {   
-    // API call for trip details
     const response = await fetch(process.env.REACT_APP_API_HOST + '/info')
     const json = await response.json()
+    
     // Grabbing time for DateContext
     setStart({ origin: {
       plannedDateTime: json.data.legs[0].origin.plannedDateTime.slice(11,19)
@@ -24,22 +25,22 @@ function App() {
       destination: {
         plannedDateTime: json.data.legs[0].destination.plannedDateTime.slice(11,19)
       }
-    });
+    })
+    
     // Stops for trip
     setStops(json.data.legs[json.data.legs.length - 1].stops)
     console.log(json)
   }
   
   useEffect(() => {
-    fetchTrip();
-    console.log(stops)
+    fetchTrip()
   }, [status])
 
   useEffect(() => {
     Web3Client()
   }, [])
   
-    // gettreininformatie_2, idea for feature. Not high priority
+  // gettreininformatie_2, idea for feature. Not high priority
 
 
   return (
