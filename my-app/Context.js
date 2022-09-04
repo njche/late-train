@@ -6,9 +6,8 @@ const functions = require('./Functions')
 
 functions.currentTime()
 
-functions.sortBounds()
-
 functions.getContext()
 
+functions.sortBounds()
 
 // WRITE OUT ON WHITEBOARD

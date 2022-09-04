@@ -103,22 +103,27 @@ function getTrip(query) {
         
         res.on('end', () => {
             const data = JSON.parse(str)
-            
             // storing relevant data to objects
 
             // all info
             info.info = data;
 
+            // Trip destination
+            let endPoint = info.info.legs[info.info.legs.length - 1].destination;
+
+            // Defines the finish lines of trip
+            bounds.push({ lat: endPoint.lat - 0.0024, lng: endPoint.lng - 0.001 });
+            bounds.push({ lat: endPoint.lat + 0.0008, lng: endPoint.lng - 0.004 });
+            bounds.push({ lat: endPoint.lat + 0.0024, lng: endPoint.lng + 0.001 });
+            bounds.push({ lat: endPoint.lat - 0.0007, lng: endPoint.lng + 0.004 });
+        
+            // sorts finish line boundary coordinates to help verify train has arrived
+            sortBounds();
+
+            // Day that the trip begins
             let startDay = Number(info.info.legs[0].origin.plannedDateTime.slice(8,10));
-            console.log(startDay)
-
-            // let startMonth = Number(info.info.legs[0].origin.plannedDateTime.slice(5,7));
-            // let deadlineDay = Number(info.info.legs[0].destination.plannedDateTime.slice(8,10));
-            // let deadlineMonth = Number(info.info.legs[0].destination.plannedDateTime.slice(5,7));
-
 
             // these if statements prevent using trips that already active, thus giving us time to vote.
-            
             if (Number(time.now.slice(0,2)) > Number(info.info.legs[0].origin.plannedDateTime.slice(11,13))) {
                 if (time.day === startDay) {
                     x += 1;
@@ -165,7 +170,7 @@ function duration() {
     let ssDuration = info.info.legs[0].origin.plannedDateTime.slice(17,19);
     let deadlineHour = Number(info.info.legs[0].destination.plannedDateTime.slice(11,13));
     let deadlineMinute = Number(info.info.legs[0].destination.plannedDateTime.slice(14,16));
-    let minutesBeforeDeadline = Number(time.now.slice(0, 2) * 100) + Number(time.now.slice(3, 5));
+    let minutesBeforeDeadline = Number(time.now.slice(0, 2) * 60) + Number(time.now.slice(3, 5));
 
     time.startTime = info.info.legs[0].origin.plannedDateTime.slice(11,19);
     time.durationHours = count;
@@ -184,8 +189,10 @@ function duration() {
         }
     }
 
-    deadline = ((deadlineHour * 100) + deadlineMinute);
+    deadline = ((deadlineHour * 60) + deadlineMinute);
 
+    console.log(minutesBeforeDeadline);
+    console.log(deadline);
     if (minutesBeforeDeadline > deadline) {
         if (time.day === startDay) {
             location.late = true;
@@ -234,7 +241,6 @@ getLocation = () => {
             }
 
             // changes status wether if clock is equal to trips planned departure time or not
-
             if (time.day === startDay) {
                 h - dHours > 0 ? location.status = 'Active' :
                 h - dHours === 0 ? m - dMinutes >= 0 ? location.status = 'Active' :
@@ -246,8 +252,7 @@ getLocation = () => {
                 location.status = 'Waiting for departure'
             }
 
-            // logic wether GPS is active or has not departed. If no GPS location, we call the initial getContext Function
-            
+            // logic wether GPS is active or has not departed. If no GPS location, we call the initial getContext Function            
             if (location.status === 'Active') {
                 if (typeof location.lat == 'undefined') {
                     console.log('No GPS coordinates')
