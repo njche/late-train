@@ -159,7 +159,6 @@ function getTrip(query) {
 
 function duration() {
     let endDay = Number(info.info.legs[0].destination.plannedDateTime.slice(8,10));
-    let startDay = Number(info.info.legs[0].origin.plannedDateTime.slice(8,10));
     let mmDuration = info.info.legs[0].origin.plannedDateTime.slice(14,16);
     let ssDuration = info.info.legs[0].origin.plannedDateTime.slice(17,19);
     let deadlineHour = Number(info.info.legs[0].destination.plannedDateTime.slice(11,13));
