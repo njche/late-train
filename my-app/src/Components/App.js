@@ -39,9 +39,8 @@ function App() {
   useEffect(() => {
     Web3Client()
   }, [])
-  
-  // gettreininformatie_2, idea for feature. Not high priority
 
+  // gettreininformatie_2, idea for feature. Not high priority
 
   return (
       <div>
