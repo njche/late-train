@@ -9,7 +9,7 @@ import { statusContext } from '../Contexts/StatusContext'
 import '../Styles/App.css'
 
 function App() {
-  const [stops, setStops] = useContext(stopContext)
+  const [, setStops] = useContext(stopContext)
   const [start, setStart] = useContext(dateContext)
   const [status] = useContext(statusContext)
   

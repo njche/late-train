@@ -102,7 +102,7 @@ function MyComponent() {
         zoom={8}
       >
       <Marker 
-        position={location}
+        position={location === undefined ? location = null: location}
         icon={{ 
           url: '/trainMarker.png',
           scaledSize: new window.google.maps.Size(50, 50)

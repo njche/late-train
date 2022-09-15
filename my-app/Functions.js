@@ -11,7 +11,7 @@ getContext = () => {
     const contextOptions = {
         hostname: 'gateway.apiportal.ns.nl',
         port: 443,
-        path: '/reisinformatie-api/api/v3/trips?lang=eng&fromStation=apd&toStation=ww&originWalk=false&originBike=false&originCar=false&destinationWalk=false&destinationBike=false&destinationCar=false&shorterChange=false&travelAssistance=false&searchForAccessibleTrip=false&localTrainsOnly=false&excludeHighSpeedTrains=false&excludeTrainsWithReservationRequired=false&yearCard=false&discount=NO_DISCOUNT&travelClass=2&passing=false&travelRequestType=DEFAULT',
+        path: '/reisinformatie-api/api/v3/trips?lang=eng&fromStation=asd&toStation=ut&originWalk=false&originBike=false&originCar=false&destinationWalk=false&destinationBike=false&destinationCar=false&shorterChange=false&travelAssistance=false&searchForAccessibleTrip=false&localTrainsOnly=false&excludeHighSpeedTrains=false&excludeTrainsWithReservationRequired=false&yearCard=false&discount=NO_DISCOUNT&travelClass=2&passing=false&travelRequestType=DEFAULT',
         method: 'GET',
         headers: {
             'Ocp-Apim-Subscription-Key': process.env.API_KEY
@@ -32,6 +32,7 @@ getContext = () => {
         res.on('end', () => {
             const data = JSON.parse(str)
 
+            location.status = 'Waiting on departure';
             location.late = false;
             
             if (x === 6) {
@@ -55,14 +56,7 @@ getContext = () => {
                 return getContext();
             }
             
-            if (data.trips[x].legs[0].product.shortCategoryName === 'BUS') {
-                location.status = 'Waiting for departure';
-                x += 1;
-                console.log('Trip #', x);
-                return getContext();
-            }
-
-            if (data.trips[x].status === 'ALTERNATIVE_TRANSPORT') {
+            if (data.trips[x].legs[0].product.type !== 'TRAIN') {
                 location.status = 'Waiting for departure';
                 x += 1;
                 console.log('Trip #', x);
@@ -127,7 +121,7 @@ function getTrip(query) {
             if (Number(time.now.slice(0,2)) > Number(info.info.legs[0].origin.plannedDateTime.slice(11,13))) {
                 if (time.day === startDay) {
                     x += 1;
-                    console.log(x, 'first')
+                    console.log(x, 'LINE 124')
                     console.log(info)
                     return getContext()
                 }
@@ -137,8 +131,7 @@ function getTrip(query) {
                 if (time.day === startDay) {
                     if (Number(time.now.slice(3,5)) > Number(info.info.legs[0].origin.plannedDateTime.slice(14,16))) {
                         x += 1;
-                        console.log(x, 'second')
-                        console.log(info)
+                        console.log(x, 'LINE 134')
                         return getContext()
                     }
                 }
@@ -146,12 +139,12 @@ function getTrip(query) {
             
             // train number
             data.legs.length !== undefined ? legs.product = parseInt(data.legs[0].product.number) : getContext();
+            legs.startDate = new Date(info.info.legs[0].origin.actualDateTime);
+            legs.arrivalDate = new Date(info.info.legs[0].destination.actualDateTime);
+
 
             // route stops
             stops.stops = data.legs[0].stops;
-
-            // reset count
-            x = 0;
 
             // triggers function to get GPS coordinates of active train
             return getLocation();
@@ -241,15 +234,29 @@ getLocation = () => {
             }
 
             // changes train status whether if clock is equal to trips planned departure time or not
-            if (time.day === startDay) {
-                currentHour - startHour > 0 ? location.status = 'Active' :
-                currentHour - startHour === 0 ? currentMinute - startMinute >= 0 ? location.status = 'Active' :
-                location.status = 'Waiting for departure' :
-                location.status = 'Waiting for departure'
+            if (time.day < startDay) {
+                location.status = 'Waiting for departure';
             }
 
-            if (time.day < startDay) {
-                location.status = 'Waiting for departure'
+            if (time.day === startDay) {
+                if (currentHour - startHour > 0) {
+                    if (typeof location.lat == 'undefined') {
+                        console.log('No GPS coordinates LINE 242')
+                        x += 1;
+                        return getContext();
+                    }
+                    location.status = 'Active';
+                }
+                if (currentHour - startHour === 0) {
+                    if (currentMinute - startMinute >= 0) {
+                        if (typeof location.lat == 'undefined') {
+                            console.log('No GPS coordinates LINE 251')
+                            x += 1;
+                            return getContext();
+                        }
+                        location.status = 'Active';
+                    }
+                }
             }
 
             // logic for GPS, if it's active or has not departed. If no GPS location, we call the initial getContext() Function            
@@ -269,7 +276,7 @@ getLocation = () => {
             }
             
 
-            console.log('Location of product: ' + legs.product, location);
+            console.log('Location of product: ' + Number(legs.product), location);
             // checks whether the train has reach destination. If it has it will automatically restart the process for the next trip, otherwise it will update GPS coordinates
             return checkStatus(location);
         })
@@ -294,7 +301,8 @@ const checkStatus = (location) => {
     if (location.status !== 'Arrived') {
         return setTimeout(getLocation, 3000)
     }
-    return setTimeout(getContext, 6000)
+    x = 0;
+    return setTimeout(getContext, 10000)
 }
 
 function sortBounds() {
@@ -328,7 +336,19 @@ function currentTime() {
 
     time.day = day;
 
+    time.unixSeconds = Math.round(Date.now() / 1000)
+
     console.log(time);
+    
+    if (legs.arrivalDate) {
+        let msArrival = legs.arrivalDate.getTime()
+        let msStart = legs.startDate.getTime()
+        time.UnixSecondsArrivalTime = Math.round(msArrival / 1000)
+        time.UnixSecondsStartTime = Math.round(msStart / 1000)
+    } else {
+        time.UnixSecondsArrivalTime = null;
+        time.UnixSecondsStartTime = null;
+    }
     
     info.info !== undefined ? duration(count):
     console.log("info undefined")

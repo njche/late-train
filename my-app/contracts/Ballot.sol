@@ -2,6 +2,8 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
+// import "@chainlink/contracts/src/v0.8/KeeperCompatible.sol";
+
 contract Ballot {
    
     struct Voter {
@@ -16,11 +18,20 @@ contract Ballot {
 
     mapping(address => Voter) public voters;
     mapping(uint => address) public addresses;
+    address creator;
+    bool closed;
+    bool active;
     uint addressCount;
-
+    uint start;
+    uint end;
     Proposal[] public proposals;
 
-    constructor() payable {
+    constructor(uint start_, uint end_) {
+        closed = false;
+        active = false;
+        creator = msg.sender;
+        start = start_;
+        end = end_;
 
         proposals.push(Proposal({
             name: "Yes",
@@ -38,11 +49,8 @@ contract Ballot {
         }));
     }
 
-    function ballotAddress() public view returns (address) {
-        return address(this);
-    }
-
     function vote(uint proposal, address user) public {
+        require(closed == true, "Voting is closed.");
         Voter storage sender = voters[user];
         require(!sender.voted, "Already voted.");
         sender.voted = true;
@@ -51,6 +59,10 @@ contract Ballot {
         addresses[addressCount] = user;
         addressCount += 1;
         proposals[proposal].voteCount += 1;
+    }
+
+    function ballotAddress() public view returns (address) {
+        return address(this);
     }
     
     function ballotVoters() public view returns (address[] memory) {
@@ -62,11 +74,6 @@ contract Ballot {
         return voterArray;
     }
 
-    function toBytes(uint256 x) private pure returns (bytes memory b) {
-        b = new bytes(32);
-        assembly { mstore(add(b, 32), x) }
-    }
-
     function ballotVotersInfo() public view returns (bytes[] memory) {
         bytes[] memory voterInfo = new bytes[](addressCount);
         for (uint i = 0; i < addressCount; i++) {
@@ -75,8 +82,7 @@ contract Ballot {
         return voterInfo;
     }
 
-    function winningProposal() public view
-            returns (uint winningProposal_) {
+    function winningProposal() public view returns (uint winningProposal_) {
         uint winningVoteCount = proposals[0].voteCount;
 
         for (uint p = 0; p < proposals.length; p++) {
@@ -97,53 +103,12 @@ contract Ballot {
         }
     }
 
-    function winnerName() public view
-            returns (string memory winnerName_)
-    {
+    function winnerName() public view returns (string memory winnerName_) {
         winnerName_ = proposals[winningProposal()].name;
     }
-}
 
-contract BallotFactory {
-
-    struct Voter {
-        bool voted;
-        uint vote;
-    }
-
-    Ballot[] public ballots;
-    
-    function create2AndSendEther(bytes32 _salt) public payable {
-        Ballot ballot = (new Ballot){value: msg.value, salt: _salt}();
-        ballots.push(ballot);
-    }
-
-    function getBallot(uint _index) public view returns (
-        address ballotAddress,
-        uint winningProposal_,
-        string memory winnerName_) {
-        
-        Ballot ballot = ballots[_index];
-        return (ballot.ballotAddress(), ballot.winningProposal(), ballot.winnerName());
-    }
-
-    function getCurrentBallot() public view returns (
-        address ballotAddress,
-        uint winningProposal_,
-        string memory winnerName_,
-        address[] memory ballotVoters_,
-        bytes[] memory ballotVotersInfo_,
-        uint amountOfBallots) {
-        uint length = ballots.length - 1;
-        amountOfBallots = ballots.length;
-        Ballot ballot = ballots[length];
-        return (ballot.ballotAddress(), ballot.winningProposal(), ballot.winnerName(), ballot.ballotVoters(), ballot.ballotVotersInfo(), amountOfBallots);
-    }
-
-    function voteCurrentBallot(uint _vote) public {
-        uint length = ballots.length - 1;
-        address user = msg.sender;
-        Ballot ballot = ballots[length];
-        ballot.vote(_vote, user);
+    function toBytes(uint256 x) private pure returns (bytes memory b) {
+        b = new bytes(32);
+        assembly { mstore(add(b, 32), x) }
     }
 }
