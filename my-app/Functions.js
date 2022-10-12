@@ -65,9 +65,10 @@ getContext = () => {
 
             console.log(data.trips[x].legs[0].destination.name);
             context.payload = data.trips[x].ctxRecon;
+            console.log(context.payload);
             
             // triggers next query function            
-            getTrip(context.payload)
+            getTrip(context.payload);
         })
         
         req.on('error', error => {
@@ -77,6 +78,9 @@ getContext = () => {
 }
 
 function getTrip(query) { 
+
+    console.log(query);
+
     const options = {
         hostname: 'gateway.apiportal.ns.nl',
         port: 443,
@@ -98,6 +102,8 @@ function getTrip(query) {
         res.on('end', () => {
             const data = JSON.parse(str)
             // storing relevant data to objects
+
+            data.legs.length !== undefined ? legs.product = parseInt(data.legs[0].product.number) : getContext();
 
             // all info
             info.info = data;
@@ -121,7 +127,7 @@ function getTrip(query) {
             if (Number(time.now.slice(0,2)) > Number(info.info.legs[0].origin.plannedDateTime.slice(11,13))) {
                 if (time.day === startDay) {
                     x += 1;
-                    console.log(x, 'LINE 124')
+                    console.log(x, 'LINE 130')
                     console.log(info)
                     return getContext()
                 }
@@ -138,10 +144,14 @@ function getTrip(query) {
             }
             
             // train number
-            data.legs.length !== undefined ? legs.product = parseInt(data.legs[0].product.number) : getContext();
-            legs.startDate = new Date(info.info.legs[0].origin.actualDateTime);
-            legs.arrivalDate = new Date(info.info.legs[0].destination.actualDateTime);
-
+            if (info.info.legs[0].origin.actualDateTime) {
+                legs.startDate = new Date(info.info.legs[0].origin.actualDateTime);
+                legs.arrivalDate = new Date(info.info.legs[0].destination.actualDateTime);
+            } else {
+                legs.startDate = new Date(info.info.legs[0].origin.plannedDateTime);
+                legs.arrivalDate = new Date(info.info.legs[0].destination.plannedDateTime);
+            }
+            
 
             // route stops
             stops.stops = data.legs[0].stops;
@@ -168,7 +178,7 @@ function duration() {
     time.startTime = info.info.legs[0].origin.plannedDateTime.slice(11,19);
     time.durationHours = count;
     time.durationMinutes = Number(time.now.slice(3,5)) - Number(mmDuration);
-    time.durationSeconds = Number(time.now.slice(6,8)) - ssDuration;
+    time.durationSeconds = Number(time.now.slice(6,8)) - Number(ssDuration);
 
     time.durationMinutes < 0 ? time.durationMinutes += 60 : time.durationMinutes
 
@@ -343,15 +353,15 @@ function currentTime() {
     if (legs.arrivalDate) {
         let msArrival = legs.arrivalDate.getTime()
         let msStart = legs.startDate.getTime()
-        time.UnixSecondsArrivalTime = Math.round(msArrival / 1000)
-        time.UnixSecondsStartTime = Math.round(msStart / 1000)
+        time.unixSecondsArrivalTime = Math.round(msArrival / 1000)
+        time.unixSecondsStartTime = Math.round(msStart / 1000)
     } else {
-        time.UnixSecondsArrivalTime = null;
-        time.UnixSecondsStartTime = null;
+        time.unixSecondsArrivalTime = null;
+        time.unixSecondsStartTime = null;
     }
     
     info.info !== undefined ? duration(count):
-    console.log("info undefined")
+    console.log("info undefined") 
     
     setTimeout(function() { currentTime() }, 1000);
 }
