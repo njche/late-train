@@ -1,6 +1,4 @@
 import Web3 from "web3";
-import BallotContractBuild from 'contracts/Ballot.json'
-import BallotFactoryContractBuild from 'contracts/BallotFactory.json'
 
 let selectedAccount
 
@@ -9,7 +7,8 @@ let factoryContract
 export let initialized = false
 
 export const Web3Client = async () => {
-    let provider = window.ethereum;
+    let provider = window.ethereum
+    console.log(provider)
     if (typeof provider !== 'undefined') {
         provider
             .request({ method: 'eth_requestAccounts' })
@@ -26,19 +25,343 @@ export const Web3Client = async () => {
         })
     }
     const web3 = new Web3(provider)
-
-    console.log(BallotContractBuild.networks)
-    console.log(BallotFactoryContractBuild.networks)
     
     if (!provider) {
-        initialized = false;
+        initialized = false
         console.log('Web3 not avaible on this browser')
     } else {
         const networkId = await web3.eth.net.getId()
-        factoryContract = new web3.eth.Contract(BallotFactoryContractBuild.abi, "0x08Cf814FC5AfFB4D910E422F076431fC80b957f1")
-        console.log(BallotFactoryContractBuild.networks)
-        console.log(BallotFactoryContractBuild.updatedAt)
-        console.log(factoryContract.methods)
+        factoryContract = new web3.eth.Contract([
+            {
+                "inputs": [],
+                "stateMutability": "payable",
+                "type": "constructor"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "bytes32",
+                        "name": "id",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "ChainlinkCancelled",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "bytes32",
+                        "name": "id",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "ChainlinkFulfilled",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "bytes32",
+                        "name": "id",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "ChainlinkRequested",
+                "type": "event"
+            },
+            {
+                "inputs": [],
+                "name": "create2",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "deposit",
+                "outputs": [],
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "requestId_",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "end",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "start",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "fulfill",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes",
+                        "name": "",
+                        "type": "bytes"
+                    }
+                ],
+                "name": "performUpkeep",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "request",
+                "outputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "requestId",
+                        "type": "bytes32"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "bytes32",
+                        "name": "requestId",
+                        "type": "bytes32"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "s_end",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "s_start",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "RequestEta",
+                "type": "event"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint8",
+                        "name": "_vote",
+                        "type": "uint8"
+                    }
+                ],
+                "name": "voteCurrentBallot",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "stateMutability": "payable",
+                "type": "receive"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "ballots",
+                "outputs": [
+                    {
+                        "internalType": "contract Ballot",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes",
+                        "name": "",
+                        "type": "bytes"
+                    }
+                ],
+                "name": "checkUpkeep",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "upkeepNeeded",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "bytes",
+                        "name": "",
+                        "type": "bytes"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_index",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "getBallot",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "ballotAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "winningProposal_",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "winnerName_",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getCurrentBallot",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "ballotAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "winningProposal_",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "winnerName_",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "address[]",
+                        "name": "ballotVoters_",
+                        "type": "address[]"
+                    },
+                    {
+                        "internalType": "bytes[]",
+                        "name": "ballotVotersInfo_",
+                        "type": "bytes[]"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "amountOfBallots",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "owner",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "s_end",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "s_needBallot",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "s_start",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "viewEta",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ], "0xc839CC659476B169A90ba28CBEda71165aB120e7")
         initialized = true;
     }
 }
@@ -68,8 +391,14 @@ export const whoWon = async () => {
         await Web3Client()
     }
 
-    console.log(factoryContract.methods
+    factoryContract.methods
     .getCurrentBallot()
-    .send({ from: selectedAccount }))
+    .call((error, result) => {
+        if (error) {
+            console.log('Ballot currently has no votes.')
+        } else {
+            console.log(result)
+        }
+    })
 }
 

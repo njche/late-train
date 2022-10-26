@@ -2,13 +2,13 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-// import "@chainlink/contracts/src/v0.8/KeeperCompatible.sol";
+import "@chainlink/contracts/src/v0.8/KeeperCompatible.sol";
 
 contract Ballot {
    
     struct Voter {
         bool voted;
-        uint vote;
+        uint8 vote;
     }
 
     struct Proposal {
@@ -18,20 +18,22 @@ contract Ballot {
 
     mapping(address => Voter) public voters;
     mapping(uint => address) public addresses;
-    address creator;
-    bool closed;
-    bool active;
+
+    address creator; //20bytes
+    bool closed; //1byte
+    bool active; //1byte
+    uint256 s_start; //5bytes
+    uint256 s_end; //5bytes
+
     uint addressCount;
-    uint start;
-    uint end;
     Proposal[] public proposals;
 
-    constructor(uint start_, uint end_) {
+    constructor(uint256 start, uint256 end) {
         closed = false;
-        active = false;
+        active = true;
         creator = msg.sender;
-        start = start_;
-        end = end_;
+        s_start = start;
+        s_end = end;
 
         proposals.push(Proposal({
             name: "Yes",
@@ -49,8 +51,8 @@ contract Ballot {
         }));
     }
 
-    function vote(uint proposal, address user) public {
-        require(closed == true, "Voting is closed.");
+    function vote(uint8 proposal, address user) public {
+        require(closed == false, "Voting is closed.");
         Voter storage sender = voters[user];
         require(!sender.voted, "Already voted.");
         sender.voted = true;
@@ -59,6 +61,16 @@ contract Ballot {
         addresses[addressCount] = user;
         addressCount += 1;
         proposals[proposal].voteCount += 1;
+    }
+
+    function endVotingPeriod() external {
+        require(creator == msg.sender, "Only the owner can call this function.");
+        closed = true;
+    }
+
+    function endBallot() external {
+        require(creator == msg.sender, "Only the owner can call this function.");
+        active = false;
     }
 
     function ballotAddress() public view returns (address) {
@@ -84,7 +96,6 @@ contract Ballot {
 
     function winningProposal() public view returns (uint winningProposal_) {
         uint winningVoteCount = proposals[0].voteCount;
-
         for (uint p = 0; p < proposals.length; p++) {
             if (proposals[p].voteCount != 0) {
                 if (proposals[p].voteCount > winningVoteCount) {
@@ -110,5 +121,9 @@ contract Ballot {
     function toBytes(uint256 x) private pure returns (bytes memory b) {
         b = new bytes(32);
         assembly { mstore(add(b, 32), x) }
+    }
+
+    function viewStart() public view returns (uint256, uint256) {
+        return (s_start, s_end);
     }
 }
