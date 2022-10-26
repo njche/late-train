@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { userVoteYes, userVoteNo, whoWon, initialized, factoryContract } from './Web3'
+import { userVoteYes, userVoteNo, whoWon, initialized } from './Web3'
 
 function Vote() {
 
@@ -28,7 +28,7 @@ function Vote() {
                   X votes
                 </div>
               </div>
-              <button className="Vote-button-no" onClick={() => whoWon()}>whowon</button>
+              <button className="Vote-button-no" onClick={() => getCurrentBallotVotes()}>vote count</button>
             </div> 
             : 
             <div className="Trip-child">            
