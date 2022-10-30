@@ -12,7 +12,7 @@ getContext = () => {
     const contextOptions = {
         hostname: 'gateway.apiportal.ns.nl',
         port: 443,
-        path: '/reisinformatie-api/api/v3/trips?lang=eng&fromStation=ehv&toStation=ut&originWalk=false&originBike=false&originCar=false&destinationWalk=false&destinationBike=false&destinationCar=false&shorterChange=false&travelAssistance=false&searchForAccessibleTrip=false&localTrainsOnly=false&excludeHighSpeedTrains=false&excludeTrainsWithReservationRequired=false&yearCard=false&discount=NO_DISCOUNT&travelClass=2&passing=false&travelRequestType=DEFAULT',
+        path: '/reisinformatie-api/api/v3/trips?lang=eng&fromStation=asd&toStation=ut&originWalk=false&originBike=false&originCar=false&destinationWalk=false&destinationBike=false&destinationCar=false&shorterChange=false&travelAssistance=false&searchForAccessibleTrip=false&localTrainsOnly=false&excludeHighSpeedTrains=false&excludeTrainsWithReservationRequired=false&yearCard=false&discount=NO_DISCOUNT&travelClass=2&passing=false&travelRequestType=DEFAULT',
         method: 'GET',
         headers: {
             'Ocp-Apim-Subscription-Key': process.env.API_KEY
@@ -310,8 +310,8 @@ getLocation = () => {
 const checkStatus = (location) => {
 
     if (location.late === true) {
-        location.status = 'Late'
-        location.late = false
+        location.status = 'Late';
+        location.late = false;
         return setTimeout(getContext, 6000)
     }
 
@@ -319,6 +319,8 @@ const checkStatus = (location) => {
         return setTimeout(getLocation, 3000)
     }
     x = 0;
+    location.lat = null;
+    location.lng = null;
     return setTimeout(getContext, 10000)
 }
 

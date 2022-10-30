@@ -4,6 +4,8 @@ let selectedAccount
 
 let factoryContract
 
+export let voteCount
+
 export let initialized = false
 
 export const Web3Client = async () => {
@@ -232,7 +234,7 @@ export const Web3Client = async () => {
                         "type": "uint256"
                     }
                 ],
-                "name": "getBallot",
+                "name": "getBallotByIndex",
                 "outputs": [
                     {
                         "internalType": "address",
@@ -285,6 +287,24 @@ export const Web3Client = async () => {
                     {
                         "internalType": "uint256",
                         "name": "amountOfBallots",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getCurrentBallotVotes",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "yesVotes",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "noVotes",
                         "type": "uint256"
                     }
                 ],
@@ -361,7 +381,7 @@ export const Web3Client = async () => {
                 "stateMutability": "view",
                 "type": "function"
             }
-        ], "0xc839CC659476B169A90ba28CBEda71165aB120e7")
+        ], "0x29902B6c5675208E76D136367C71FcD45D89da73")
         initialized = true;
     }
 }
@@ -386,18 +406,18 @@ export const userVoteNo = async () => {
     .send({ from: selectedAccount })
 }
 
-export const whoWon = async () => {
+export const howManyVotes = async () => {
     if (!initialized) {
         await Web3Client()
     }
 
     factoryContract.methods
-    .getCurrentBallot()
+    .getCurrentBallotVotes()
     .call((error, result) => {
         if (error) {
-            console.log('Ballot currently has no votes.')
+            console.log(error)
         } else {
-            console.log(result)
+            voteCount = result
         }
     })
 }
