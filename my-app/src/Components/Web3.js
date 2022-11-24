@@ -6,11 +6,11 @@ let factoryContract
 
 export let voteCount
 
-export let initialized = false
+export let initialized
 
 export const Web3Client = async () => {
+    initialized = false;
     let provider = window.ethereum
-    console.log(provider)
     if (typeof provider !== 'undefined') {
         provider
             .request({ method: 'eth_requestAccounts' })
@@ -32,6 +32,7 @@ export const Web3Client = async () => {
         initialized = false
         console.log('Web3 not avaible on this browser')
     } else {
+        initialized = true
         const networkId = await web3.eth.net.getId()
         factoryContract = new web3.eth.Contract([
             {
@@ -382,7 +383,6 @@ export const Web3Client = async () => {
                 "type": "function"
             }
         ], "0x29902B6c5675208E76D136367C71FcD45D89da73")
-        initialized = true;
     }
 }
 

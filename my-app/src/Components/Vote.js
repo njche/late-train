@@ -7,14 +7,13 @@ function Vote() {
   const [votesYes, setVotesYes] = useState('')
   const [votesNo, setVotesNo] = useState('')
 
-  howManyVotes()
-
   useEffect(() => {
     const displayVotes = (() => {
       setVotesYes(voteCount.yesVotes)
       setVotesNo(voteCount.noVotes)
     })
     if (initialized == true) {
+      howManyVotes()
       displayVotes()
     }
   }, [time])
