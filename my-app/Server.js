@@ -2,7 +2,6 @@ require('dotenv').config();
 require('./Context')
 const app = require('express')();
 const { legs, location, context, info, stops, time } = require('./Variables')
-const functions = require('./Functions');
 const PORT = 8080;
 
 app.listen(

@@ -1,8 +1,6 @@
 require('dotenv').config();
 const https = require('https')
-const express = require('express');
 const { bounds, context, info, legs, location, stops, time, pathLat, pathLng } = require('./Variables');
-const { type } = require('os');
 let deadline;
 let count = 0
 let x = 0;
@@ -12,7 +10,7 @@ getContext = () => {
     const contextOptions = {
         hostname: 'gateway.apiportal.ns.nl',
         port: 443,
-        path: '/reisinformatie-api/api/v3/trips?lang=eng&fromStation=hn&toStation=asd&originWalk=false&originBike=false&originCar=false&destinationWalk=false&destinationBike=false&destinationCar=false&shorterChange=false&travelAssistance=false&searchForAccessibleTrip=false&localTrainsOnly=false&excludeHighSpeedTrains=false&excludeTrainsWithReservationRequired=false&yearCard=false&discount=NO_DISCOUNT&travelClass=2&passing=false&travelRequestType=DEFAULT',
+        path: '/reisinformatie-api/api/v3/trips?lang=eng&fromStation=ehv&toStation=asd&originWalk=false&originBike=false&originCar=false&destinationWalk=false&destinationBike=false&destinationCar=false&shorterChange=false&travelAssistance=false&searchForAccessibleTrip=false&localTrainsOnly=false&excludeHighSpeedTrains=false&excludeTrainsWithReservationRequired=false&yearCard=false&discount=NO_DISCOUNT&travelClass=2&passing=false&travelRequestType=DEFAULT',
         method: 'GET',
         headers: {
             'Ocp-Apim-Subscription-Key': process.env.API_KEY
@@ -106,7 +104,7 @@ function getTrip(query) {
             // storing relevant data to objects
             if (typeof data.legs == 'undefined') {
                 console.log('legs undefined')
-                x++;
+                x += 1;
                 return getContext();
             }
             
@@ -166,6 +164,7 @@ function getTrip(query) {
             // triggers function to get GPS coordinates of active train
             return getLocation();
         })
+        
         req.on('error', error => {
             console.error(error);
             return getContext()
@@ -367,6 +366,11 @@ function currentTime() {
     } else {
         time.unixSecondsArrivalTime = null;
         time.unixSecondsStartTime = null;
+    }
+
+    const used = process.memoryUsage();
+    for (let key in used) {
+        console.log(`Memory: ${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
     }
     
     info.info !== undefined ? duration(count):
