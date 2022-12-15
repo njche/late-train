@@ -35,6 +35,13 @@ getContext = () => {
             location.late = false;
             
             if (x === 6) {
+                delete location.lat;
+                delete location.lng;
+                delete stops.stops;
+                delete bounds;
+                delete pathLat;
+                delete pathLng;
+                delete context.payload;
                 x = 0;
                 return getContext();
             }
@@ -64,7 +71,6 @@ getContext = () => {
 
             console.log(data.trips[x].legs[0].destination.name);
             context.payload = data.trips[x].ctxRecon;
-            console.log(context.payload);
             
             // triggers next query function            
             getTrip(context.payload);
@@ -116,15 +122,6 @@ function getTrip(query) {
             // Trip destination
             let endPoint = info.info.legs[info.info.legs.length - 1].destination;
 
-            // Defines the finish lines of trip
-            bounds.push({ lat: endPoint.lat - 0.0024, lng: endPoint.lng - 0.001 });
-            bounds.push({ lat: endPoint.lat + 0.0008, lng: endPoint.lng - 0.004 });
-            bounds.push({ lat: endPoint.lat + 0.0024, lng: endPoint.lng + 0.001 });
-            bounds.push({ lat: endPoint.lat - 0.0007, lng: endPoint.lng + 0.004 });
-        
-            // sorts finish line boundary coordinates to help verify train has arrived
-            sortBounds();
-
             // Day that the trip begins
             let startDay = Number(info.info.legs[0].origin.plannedDateTime.slice(8,10));
 
@@ -132,8 +129,8 @@ function getTrip(query) {
             if (Number(time.now.slice(0,2)) > Number(info.info.legs[0].origin.plannedDateTime.slice(11,13))) {
                 if (time.day === startDay) {
                     x += 1;
-                    console.log(x, 'LINE 130')
-                    console.log(info)
+                    console.log(x, 'LINE 126');
+                    delete context.payload;
                     return getContext()
                 }
             }
@@ -142,11 +139,20 @@ function getTrip(query) {
                 if (time.day === startDay) {
                     if (Number(time.now.slice(3,5)) > Number(info.info.legs[0].origin.plannedDateTime.slice(14,16))) {
                         x += 1;
-                        console.log(x, 'LINE 134')
+                        console.log(x, 'LINE 136');
                         return getContext()
                     }
                 }
             }
+
+            // Defines the finish lines of trip
+            bounds.push({ lat: endPoint.lat - 0.0024, lng: endPoint.lng - 0.001 });
+            bounds.push({ lat: endPoint.lat + 0.0008, lng: endPoint.lng - 0.004 });
+            bounds.push({ lat: endPoint.lat + 0.0024, lng: endPoint.lng + 0.001 });
+            bounds.push({ lat: endPoint.lat - 0.0007, lng: endPoint.lng + 0.004 });
+
+            // sorts finish line boundary coordinates to help verify train has arrived
+            sortBounds();
             
             // train number
             if (info.info.legs[0].origin.actualDateTime) {
@@ -311,6 +317,13 @@ const checkStatus = (location) => {
     if (location.late === true) {
         location.status = 'Late';
         location.late = false;
+        delete location.lat;
+        delete location.lng;
+        delete stops.stops;
+        delete bounds;
+        delete pathLat;
+        delete pathLng;
+        delete context.payload;
         return setTimeout(getContext, 6000)
     }
 
@@ -318,8 +331,13 @@ const checkStatus = (location) => {
         return setTimeout(getLocation, 3000)
     }
     x = 0;
-    location.lat = null;
-    location.lng = null;
+    delete location.lat;
+    delete location.lng;
+    delete stops.stops;
+    delete bounds;
+    delete pathLat;
+    delete pathLng;
+    delete context.payload;
     return setTimeout(getContext, 10000)
 }
 
