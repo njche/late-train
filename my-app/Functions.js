@@ -10,7 +10,7 @@ getContext = () => {
     const contextOptions = {
         hostname: 'gateway.apiportal.ns.nl',
         port: 443,
-        path: '/reisinformatie-api/api/v3/trips?lang=eng&fromStation=ehv&toStation=asd&originWalk=false&originBike=false&originCar=false&destinationWalk=false&destinationBike=false&destinationCar=false&shorterChange=false&travelAssistance=false&searchForAccessibleTrip=false&localTrainsOnly=false&excludeHighSpeedTrains=false&excludeTrainsWithReservationRequired=false&yearCard=false&discount=NO_DISCOUNT&travelClass=2&passing=false&travelRequestType=DEFAULT',
+        path: '/reisinformatie-api/api/v3/trips?lang=eng&fromStation=asd&toStation=ut&originWalk=false&originBike=false&originCar=false&destinationWalk=false&destinationBike=false&destinationCar=false&shorterChange=false&travelAssistance=false&searchForAccessibleTrip=false&localTrainsOnly=false&excludeHighSpeedTrains=false&excludeTrainsWithReservationRequired=false&yearCard=false&discount=NO_DISCOUNT&travelClass=2&passing=false&travelRequestType=DEFAULT',
         method: 'GET',
         headers: {
             'Ocp-Apim-Subscription-Key': process.env.API_KEY
@@ -297,6 +297,11 @@ getLocation = () => {
                 }
             }
             
+            const used = process.memoryUsage();
+
+            for (let key in used) {
+                console.log(`Memory: ${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+            }
 
             console.log('Location of product: ' + legs.product, location);
             // checks whether the train has reach destination. If it has it will automatically restart the process for the next trip, otherwise it will update GPS coordinates
@@ -358,11 +363,55 @@ function sortBounds() {
 function currentTime() {
     let date = new Date();
     let day = date.getUTCDate();
-    let hour = date.getUTCHours() + 2;
+    let hour = date.getUTCHours();
     let minute = date.getUTCMinutes();
     let second = date.getUTCSeconds();
+    let month = date.getUTCMonth();
+    let utcMidnightTernary;
+
+    // the if statements below are used to determine wether the timezone is CET or CEST
     
-    day = (date.getUTCHours() > 21) ? day = day + 1 : day;
+    if (month < 2) {
+        hour = date.getUTCHours() + 1;
+        utcMidnightTernary = 22;
+    }
+    
+    if (month > 2) {
+        hour = date.getUTCHours() + 2;
+        utcMidnightTernary = 21;
+    }
+
+    if (month > 9) {
+        hour = date.getUTCHours() + 1;
+        utcMidnightTernary = 22;
+    }
+
+    if (month < 9) {
+        hour = date.getUTCHours() + 2;
+        utcMidnightTernary = 21;
+    }
+
+    if (month == 2) {
+        if (day == 26) {
+            hour > 1 ? hour = date.getUTCHours() + 2 : hour = date.getUTCHours() + 1;
+        }
+
+        if (day > 26) {
+            hour = date.getUTCHours() + 2;
+        }
+    }
+
+    if (month == 9) {
+        if (day == 29) {
+            hour > 2 ? hour = date.getUTCHours() + 1 : hour = date.getUTCHours() + 2;
+        }
+
+        if (day > 29) {
+            hour = date.getUTCHours() + 1;
+        }
+    }
+
+    day = (hour > utcMidnightTernary) ? day = day + 1 : day;
     hour = (hour > 23) ? h = "0" : hour;
     hour = (hour < 10) ? "0" + hour : hour;
     minute = (minute < 10) ? "0" + minute : minute;
@@ -386,11 +435,6 @@ function currentTime() {
         time.unixSecondsStartTime = null;
     }
 
-    const used = process.memoryUsage();
-    for (let key in used) {
-        console.log(`Memory: ${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
-    }
-    
     info.info !== undefined ? duration(count):
     console.log("info undefined") 
     
