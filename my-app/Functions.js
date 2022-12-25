@@ -82,6 +82,22 @@ getContext = () => {
     })
 }
 
+function sortBounds() {
+    for (let i = 0; i < bounds.length; i++) {
+        pathLat.push(bounds[i].lat);
+        pathLng.push(bounds[i].lng);
+    }
+    pathLat.sort((a, b) => {
+        return a - b
+    })
+    pathLng.sort((a, b) => {
+        return a - b
+    })
+    console.log(bounds, 'bounds 1')
+    bounds.length = 0;
+    console.log(bounds, 'bounds 2')
+}
+
 function getTrip(query) { 
 
     console.log(query);
@@ -145,15 +161,21 @@ function getTrip(query) {
                 }
             }
 
+            console.log(pathLat);
+            console.log(pathLng);
             // Defines the finish lines of trip
             bounds.push({ lat: endPoint.lat - 0.0024, lng: endPoint.lng - 0.001 });
             bounds.push({ lat: endPoint.lat + 0.0008, lng: endPoint.lng - 0.004 });
             bounds.push({ lat: endPoint.lat + 0.0024, lng: endPoint.lng + 0.001 });
             bounds.push({ lat: endPoint.lat - 0.0007, lng: endPoint.lng + 0.004 });
-
+            
             // sorts finish line boundary coordinates to help verify train has arrived
             sortBounds();
+            console.log(pathLat);
+            console.log(pathLng);
             
+
+
             // train number
             if (info.info.legs[0].origin.actualDateTime) {
                 legs.startDate = new Date(info.info.legs[0].origin.actualDateTime);
@@ -245,7 +267,7 @@ getLocation = () => {
             let startDay = Number(info.info.legs[0].origin.plannedDateTime.slice(8,10));
             let startHour = Number(info.info.legs[0].origin.plannedDateTime.slice(11,13));
             let startMinute = Number(info.info.legs[0].origin.plannedDateTime.slice(14,16));
-
+            console.log(bounds);
             // Grabs lat, lng. Adds to location Object
             for (i = 0; i < trains.payload.treinen.length; i++) {
                 if (trains.payload.treinen[i].treinNummer === legs.product) {
@@ -345,20 +367,6 @@ const checkStatus = (location) => {
     delete context.payload;
     return setTimeout(getContext, 10000)
 }
-
-function sortBounds() {
-    for (let i = 0; i < bounds.length; i++) {
-        pathLat.push(bounds[i].lat);
-        pathLng.push(bounds[i].lng);
-    }
-    pathLat.sort((a, b) => {
-        return a - b
-    })
-    pathLng.sort((a, b) => {
-        return a + b
-    })
-}
-
 
 function currentTime() {
     let date = new Date();

@@ -39,8 +39,8 @@ function MyComponent() {
   const [location, setLocation] = useState({})
   const [start, setStart] = useState({})
   const [finish, setFinish] = useState({})
-  const [, setPathsLat] = useState({})
-  const [, setPathsLng] = useState({})
+  const [pathsLat, setPathsLat] = useState({})
+  const [pathsLng, setPathsLng] = useState({})
   
   // this is grabbing the GPS data from the server, data fetches every ~2.5 seconds after called in useEffect
   const fetchLocation = async () => {   
