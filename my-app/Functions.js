@@ -265,7 +265,6 @@ getLocation = () => {
             let startDay = Number(info.info.legs[0].origin.plannedDateTime.slice(8,10));
             let startHour = Number(info.info.legs[0].origin.plannedDateTime.slice(11,13));
             let startMinute = Number(info.info.legs[0].origin.plannedDateTime.slice(14,16));
-            console.log(bounds);
             // Grabs lat, lng. Adds to location Object
             for (i = 0; i < trains.payload.treinen.length; i++) {
                 if (trains.payload.treinen[i].treinNummer === legs.product) {
