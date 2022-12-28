@@ -93,9 +93,7 @@ function sortBounds() {
     pathLng.sort((a, b) => {
         return a - b
     })
-    console.log(bounds, 'bounds 1')
     bounds.length = 0;
-    console.log(bounds, 'bounds 2')
 }
 
 function getTrip(query) { 
