@@ -159,8 +159,6 @@ function getTrip(query) {
                 }
             }
 
-            console.log(pathLat);
-            console.log(pathLng);
             // Defines the finish lines of trip
             bounds.push({ lat: endPoint.lat - 0.0024, lng: endPoint.lng - 0.001 });
             bounds.push({ lat: endPoint.lat + 0.0008, lng: endPoint.lng - 0.004 });
@@ -344,10 +342,10 @@ const checkStatus = (location) => {
         delete location.lat;
         delete location.lng;
         delete stops.stops;
-        delete bounds;
-        delete pathLat;
-        delete pathLng;
         delete context.payload;
+        bounds = [];
+        pathLat = [];
+        pathLng = [];
         return setTimeout(getContext, 6000)
     }
 
