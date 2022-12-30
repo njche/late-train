@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { userVoteYes, userVoteNo, initialized, howManyVotes, voteCount } from './Web3'
 import { timeContext } from "../Contexts/TimeContext"
+import { userVoteYes, userVoteNo, initialized, howManyVotes, voteCount } from './Web3'
 
 function Vote() {
   const [time] = useContext(timeContext)
@@ -8,14 +8,15 @@ function Vote() {
   const [votesNo, setVotesNo] = useState('')
 
   useEffect(() => {
-    const displayVotes = (() => {
-      setVotesYes(voteCount.yesVotes)
-      setVotesNo(voteCount.noVotes)
+    const displayVotes = (async () => {
+        await howManyVotes()
+        console.log(voteCount)
+        setVotesYes(voteCount.yesVotes)
+        setVotesNo(voteCount.noVotes)
     })
-    if (initialized == true) {
-      howManyVotes()
-      displayVotes()
-    }
+
+    displayVotes()
+    
   }, [time])
 
   return (

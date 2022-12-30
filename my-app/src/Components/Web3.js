@@ -382,7 +382,7 @@ export const Web3Client = async () => {
                 "stateMutability": "view",
                 "type": "function"
             }
-        ], "0x29902B6c5675208E76D136367C71FcD45D89da73")
+        ], "0xe24dA855408125ECF51280781F56BdDD2b7735F2")
     }
 }
 
@@ -418,6 +418,7 @@ export const howManyVotes = async () => {
             console.log(error)
         } else {
             voteCount = result
+            return voteCount
         }
     })
 }

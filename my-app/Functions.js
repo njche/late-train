@@ -343,7 +343,7 @@ const checkStatus = (location) => {
         delete location.lng;
         delete stops.stops;
         delete context.payload;
-        bounds = [];
+        bounds.length = 0;
         pathLat = [];
         pathLng = [];
         return setTimeout(getContext, 6000)
