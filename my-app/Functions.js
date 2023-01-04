@@ -373,12 +373,17 @@ function currentTime() {
     let utcMidnightTernary;
 
     // the if statements below are used to determine wether the timezone is CET or CEST
-    
+
+    if (month < 9) {
+        hour = date.getUTCHours() + 2;
+        utcMidnightTernary = 22;
+    }
+
     if (month < 2) {
         hour = date.getUTCHours() + 1;
         utcMidnightTernary = 23;
     }
-    
+
     if (month > 2) {
         hour = date.getUTCHours() + 2;
         utcMidnightTernary = 22;
@@ -387,11 +392,6 @@ function currentTime() {
     if (month > 9) {
         hour = date.getUTCHours() + 1;
         utcMidnightTernary = 23;
-    }
-
-    if (month < 9) {
-        hour = date.getUTCHours() + 2;
-        utcMidnightTernary = 22;
     }
 
     if (month == 2) {
@@ -413,7 +413,7 @@ function currentTime() {
             hour = date.getUTCHours() + 1;
         }
     }
-    
+
     day = (hour > utcMidnightTernary) ? day = day + 1 : day;
     hour = (hour > 23) ? h = "0" : hour;
     hour = (hour < 10) ? "0" + hour : hour;
