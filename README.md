@@ -1,5 +1,5 @@
 # Late Train
-Late Train is an application where you can track a passanger train in the Netherlands in real-time. Vote wether you think it will arrive on time or not.
+Late Train is an application where you can track a passanger train in the Netherlands in real-time. Vote whether you think it will arrive on time or not.
 
 # Features
 This app is still in development so some features are not yet complete
