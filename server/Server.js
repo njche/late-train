@@ -6,7 +6,7 @@ import { legs, location, context, info, stops, time } from './Variables.js'
 import './Context.js'
 
 dotenv.config({ path: path.resolve(process.cwd(), '..', '.env')})
-
+console.log(process.env.WEB_HOST)
 const app = express();
 const PORT = 8080;
 
@@ -15,11 +15,10 @@ app.listen(
     () => console.log(`PORT ${PORT} Active`)
 )
 
-app.use(cors())
-
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Origin", process.env.WEB_HOST); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Methods: GET')
     next();
 });
 
