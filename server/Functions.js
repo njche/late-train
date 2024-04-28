@@ -1,12 +1,15 @@
 import * as https from 'https'
 import dotenv from "dotenv"
 import path from 'path'
-import { bounds, context, info, legs, location, stops, time, pathLat, pathLng } from './Variables.js'
+import { context, info, legs, location, stops, time } from './Variables.js'
 
 dotenv.config({ path: path.resolve(process.cwd(), '..', '.env')})
 
 let deadline;
-let count = 0
+let bounds = [];
+let pathLat = [];
+let pathLng = [];
+let count = 0;
 let x = 0;
 
 // Queries the soonest available trip that has not departed yet
@@ -38,14 +41,13 @@ export const getContext = () => {
 
             location.status = 'Waiting on departure';
             location.late = false;
-            
             if (x === 6) {
                 location.lat = undefined;
                 location.lng = undefined;
                 stops.stops = undefined;
-                bounds = undefined;
-                pathLat = undefined;
-                pathLng = undefined;
+                bounds = [];
+                pathLat = [];
+                pathLng = [];
                 context.payload = undefined;
                 x = 0;
                 return getContext();
@@ -361,9 +363,9 @@ const checkStatus = (location) => {
     location.lat = undefined;
     location.lng = undefined;
     stops.stops = undefined;
-    bounds = undefined;
-    pathLat = undefined;
-    pathLng = undefined;
+    bounds = [];
+    pathLat = [];
+    pathLng = [];
     context.payload = undefined;
     return setTimeout(getContext, 10000)
 }
