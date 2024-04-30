@@ -392,7 +392,7 @@ export function currentTime() {
     }
 
     day = (hour > utcMidnightTernary) ? day = day + 1 : day;
-    hour = (hour > 23) ? h = "0" : hour;
+    hour = (hour > 23) ? "0" : hour;
     hour = (hour < 10) ? "0" + hour : hour;
     minute = (minute < 10) ? "0" + minute : minute;
     second = (second < 10) ? "0" + second : second;
